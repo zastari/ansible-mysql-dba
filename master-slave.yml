@@ -1,0 +1,15 @@
+---
+- name: Install Base Packages
+  hosts: mysql
+  roles:
+    - mysql-base
+
+- name: Configure Master
+  hosts: mysql_master
+  roles:
+    - mysql-repl-master
+
+- name: Configure Slave
+  hosts: mysql_slave
+  roles:
+    - mysql-repl-slave

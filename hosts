@@ -1,0 +1,9 @@
+[mysql:base]
+mysql_slave
+mysql_master
+
+[mysql_master]
+10.209.1.245
+
+[mysql_slave]
+10.209.33.116

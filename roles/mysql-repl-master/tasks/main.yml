@@ -1,0 +1,16 @@
+---
+ - name: Create MySQL temporary directory
+   file: path={{ tmpdir }} state=directory mode=0750 owner=mysql group=mysql
+
+ - name: Create binary log directory
+   file: path={{ logdir }} state=directory mode=0750 owner=mysql group=mysql
+
+ - name: Configure MySQL binary logging
+   template: src=my.cnf.j2 dest=/etc/my.cnf
+   notify: restart mysql
+
+ - name: Ensure MySQL is started with chkconfig on
+   service: name=mysql state=started enabled=yes
+
+ - name: Add replication user grants
+   mysql_user: name=replicant host={{ hostvars[groups['mysql_slave'][0]]['ansible_eth1']['ipv4']['address'] }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present
