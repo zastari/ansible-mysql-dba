@@ -1,15 +1,21 @@
 ---
 - name: Install Base Packages
   hosts: mysql
+  remote_user: ansible
+  become: true
   roles:
     - mysql-base
 
 - name: Configure Master
   hosts: mysql_master
+  remote_user: ansible
+  become: true
   roles:
     - mysql-repl-master
 
 - name: Configure Slave
   hosts: mysql_slave
+  remote_user: ansible
+  become: true
   roles:
     - mysql-repl-slave

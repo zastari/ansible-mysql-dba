@@ -3,7 +3,7 @@ mysql_slave
 mysql_master
 
 [mysql_master]
-10.208.230.141
+10.2.0.1
 
 [mysql_slave]
-10.208.225.167
+10.2.0.2
