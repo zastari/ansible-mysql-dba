@@ -1,9 +1,0 @@
-[mysql:children]
-mysql_slave
-mysql_master
-
-[mysql_master]
-10.208.230.141
-
-[mysql_slave]
-10.208.225.167
