@@ -1,3 +1,0 @@
----
- - name: Add replication user grants
-   mysql_user: name=replicant host={{ hostvars[groups['mysql_slave'][0]]['ansible_eth1']['ipv4']['address'] }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present

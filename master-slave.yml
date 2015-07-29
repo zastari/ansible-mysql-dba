@@ -1,11 +1,4 @@
 ---
-- name: Install Base Packages
-  hosts: mysql
-  remote_user: ansible
-  become: true
-  roles:
-    - mysql-base
-
 - name: Configure Master
   hosts: mysql_master
   remote_user: ansible
