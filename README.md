@@ -1,13 +1,11 @@
-MySQL DBA Ansible Plays
-=======================
+MySQL DBA Topologies
+====================
 
-These plays are designed to deploy common replication topologies with best
-practices for secure, high-throughput environments. Currently, master/slave
-replication with an arbitrarily large number of slaves is supported. 
-
-These scripts are designed for RHEL/CentOS 5 or 6. RHEL 7 support is planned.
-There is no plan to provide Debian or other distro support at this time. Once
-complete, the following plays will be available:
+These plays are designed to deploy common replication topologies. Their goal
+is to quickly provide an environment to allow testing and evaluation of
+different topologies. They are designed for RHEL/CentOS 5 or 6. RHEL 7 support
+is planned. There is no plan to provide Debian or other distro support at this
+time. Once complete, the following plays will be available:
 
 Version Installations:
  * Percona Server 5.6

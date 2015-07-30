@@ -5,7 +5,7 @@
    with_items: groups.mysql_master
 
  - name: Connect to master
-   mysql_replication: mode=changemaster master_host={{ hostvars[groups['mysql_master'][0]]['ansible_'+repl_iface]['ipv4']['address'] }} master_user=replicant master_password={{ repl_password }} master_log_file={{ hostvars[groups['mysql_master'][0]]['server_id'] }}-{{ hostvars[groups['mysql_master'][0]]['name'] }}-bin-log.000001 master_log_pos=4
+   mysql_replication: mode=changemaster master_host={{ hostvars[groups['mysql_master'][0]]['ansible_'+repl_iface]['ipv4']['address'] }} master_user={{ repl_username }} master_password={{ repl_password }} master_log_file={{ hostvars[groups['mysql_master'][0]]['server_id'] }}-{{ hostvars[groups['mysql_master'][0]]['name'] }}-bin-log.000001 master_log_pos=4
    ignore_errors: yes
 
  - name: Start replication

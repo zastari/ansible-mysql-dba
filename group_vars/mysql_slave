@@ -1,3 +1,4 @@
 ---
+repl_username: replicant
 repl_password: replpassword
 repl_iface: eth1
