@@ -2,3 +2,4 @@
 datadir: /var/lib/mysql
 tmpdir: /var/lib/mysqltmp
 logdir: /var/lib/mysqllogs
+port: 3306
