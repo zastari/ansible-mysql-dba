@@ -6,22 +6,23 @@ practices for secure, high-throughput environments. Currently, master/slave
 replication with an arbitrarily large number of slaves is supported. 
 
 These scripts are designed for RHEL/CentOS 5 or 6. RHEL 7 support is planned.
-There is no plan to provide Debian or other distro support at this time.
+There is no plan to provide Debian or other distro support at this time. Once
+complete, the following plays will be available:
 
 Version Installations:
- y Percona Server 5.6
- n Percona Server 5.5
- n MySQL 5.7
- n MySQL 5.6
- n MySQL 5.5
- n MariaDB 10.0
+ * Percona Server 5.6
+ * Percona Server 5.5
+ * MySQL 5.7
+ * MySQL 5.6
+ * MySQL 5.5
+ * MariaDB 10.0
 
 Topologies:
- y Master/Slave (1 or many slaves)
- n Master/Master
- n MMM ( http://mysql-mmm.org/doku.php )
- n MasterHA ( https://code.google.com/p/mysql-master-ha/ )
- n Galera
+ * Master/Slave (1 or many slaves)
+ * Master/Master
+ * MMM ( http://mysql-mmm.org/doku.php )
+ * MasterHA ( https://code.google.com/p/mysql-master-ha/ )
+ * Galera
 
 Requirements
 ------------
