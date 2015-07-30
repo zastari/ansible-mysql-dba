@@ -2,7 +2,3 @@
 datadir: /var/lib/mysql
 tmpdir: /var/lib/mysqltmp
 logdir: /var/lib/mysqllogs
-server_id: 100
-name: db
-repl_password: replpassword
-repl_iface: eth1

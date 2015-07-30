@@ -3,7 +3,8 @@ mysql_slave
 mysql_master
 
 [mysql_master]
-10.2.0.1
+10.2.0.1 name=db100 server_id=100
 
 [mysql_slave]
-10.2.0.2
+10.2.0.2 name=db101 server_id=101
+10.2.0.3 name=db102 server_id=102
