@@ -6,7 +6,7 @@
 datadir                         = {{ datadir }}
 tmpdir                          = {{ tmpdir }}
 socket                          = {{ datadir }}/mysql.sock
-port                            = {{ port }}
+port                            = {{ mysql_port }}
 skip_name_resolve
 open_files_limit                = 65535
 character_set_server            = utf8
@@ -59,8 +59,8 @@ innodb_log_files_in_group       = 2
 ## InnoDB Buffer Pool
 innodb_buffer_pool_instances    = 1
 innodb_buffer_pool_size         = {{ (ansible_memtotal_mb*0.7)|round|int }}M
-innodb_buffer_pool_dump_at_shutdown = 1
-innodb_buffer_pool_load_at_startup  = 1
+#innodb_buffer_pool_dump_at_shutdown = 1
+#innodb_buffer_pool_load_at_startup  = 1
 
 ## InnoDB SSD Optimizations
 #innodb_flush_neighbors          = 0
@@ -77,7 +77,7 @@ log_bin                         = {{ logdir }}/{{ server_id }}-{{ name }}-bin-lo
 log_bin_index                   = {{ logdir }}/{{ server_id }}-{{ name }}-bin-log.index
 relay_log                       = {{ logdir }}/{{ server_id }}-{{ name }}-relay-log
 relay_log_index                 = {{ logdir }}/{{ server_id }}-{{ name }}-relay-log.index
-binlog_row_image                = minimal
+#binlog_row_image                = minimal
 
 relay_log_space_limit           = 16G
 expire_logs_days                = 4
@@ -94,10 +94,10 @@ slow_query_log                  = 1
 slow_query_log_file             = {{ logdir }}/slow-log
 log_slow_slave_statements
 long_query_time                 = 0.5
-log_slow_verbosity              = full
-slow_query_log_timestamp_always    = true
-slow_query_log_timestamp_precision = microsecond
-slow_query_log_use_global_control  = all
+#log_slow_verbosity              = full
+#slow_query_log_timestamp_always    = true
+#slow_query_log_timestamp_precision = microsecond
+#slow_query_log_use_global_control  = all
 
 [mysqld_safe]
 log_error                       = /var/log/mysqld.log

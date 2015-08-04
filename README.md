@@ -14,6 +14,7 @@ Version Installations:
  * MySQL 5.6
  * MySQL 5.5
  * MariaDB 10.0
+ * MariaDB 5.5
 
 Topologies:
  * Master/Slave (1 or many slaves)
@@ -21,11 +22,6 @@ Topologies:
  * MMM ( http://mysql-mmm.org/doku.php )
  * MasterHA ( https://code.google.com/p/mysql-master-ha/ )
  * Galera
-
-Requirements
-------------
-
-This role requires Ansible 1.4 or higher.
 
 Role Variables
 --------------
@@ -47,7 +43,7 @@ Examples
 1) Create Master/Slave replication:
 
       cp hosts.example hosts
-      ansible-playbook -i hosts master-slave.yml
+      ansible-playbook -i hosts deploy.yml
 
 Dependencies
 ------------

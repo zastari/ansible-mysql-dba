@@ -1,12 +1,19 @@
 ---
-- name: Configure Master
+- name: Configure Standalone Instances
+  hosts: mysql_base
+  remote_user: ansible
+  become: true
+  roles:
+    - mysql-base
+
+- name: Configure Masters
   hosts: mysql_master
   remote_user: ansible
   become: true
   roles:
     - mysql-repl-master
 
-- name: Configure Slave
+- name: Configure Slaves
   hosts: mysql_slave
   remote_user: ansible
   become: true

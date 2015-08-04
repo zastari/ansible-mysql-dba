@@ -2,4 +2,7 @@
 datadir: /var/lib/mysql
 tmpdir: /var/lib/mysqltmp
 logdir: /var/lib/mysqllogs
-port: 3306
+mysql_port: 3306
+mysql_version: mysql_56
+server_id: 100
+name: db
