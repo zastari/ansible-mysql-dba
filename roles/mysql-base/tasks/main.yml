@@ -1,4 +1,40 @@
 ---
+##### Gather facts
+# Retrieve Linux distribution and MySQL version information to retrieve the
+# correct repository for each instance.
+- set_fact:
+    ius_distro_tag: "Redhat"
+    ius_distro_tag_minor: "el"
+    mariadb_distro_tag: "rhel"
+  when: ansible_distribution == "Red Hat Enterprise Linux"
+
+- set_fact:
+    ius_distro_tag: "CentOS"
+    ius_distro_tag_minor: "centos"
+    mariadb_distro_tag: "centos"
+  when: ansible_distribution == "CentOS"
+
+- set_fact:
+    distro_version_int: "{{ ansible_distribution_version | int }}"
+
+- set_fact:
+    mariadb_version: "5.5"
+  when: mysql_version == "mariadb_55"
+
+- set_fact:
+    mariadb_version: "10.0"
+  when: mysql_version == "mariadb_100"
+
+- set_fact:
+    mysql_binary: "mysql"
+  when: mysql_version == "ps_56" or mysql_version == "ps_55" or mysql_version == "mariadb_55" or mysql_version == "mariadb_100"
+
+- set_fact:
+    mysql_binary: "mysqld"
+  when: mysql_version == "mysql_56" or mysql_version == "mysql_55"
+
+
+##### Pre-Install dependencies
 # Removes base mysql-libs packages that are on default installations. rpm is
 # used instead of yum to prevent dependencies such as postfix from being
 # removed.
@@ -7,14 +43,13 @@
   ignore_errors: yes
 
 
-##### Installation for Percona Server 5.5 and 5.6 using the Percona repository
-# Install repository
+##### Installation
+# Installation for Percona Server 5.5 and 5.6 using the Percona repository
 - name: Install Percona repository
   shell: rpm -Uvh http://www.percona.com/downloads/percona-release/redhat/percona-release-0.1-3.noarch.rpm
   args: {creates: /etc/yum.repos.d/percona-release.repo}
   when: mysql_version == "ps_56" or mysql_version == "ps_55"
 
-# Install server
 - name: Install Percona Server 5.6 packages
   yum: name={{ item }} state=present
   with_items: 
@@ -40,27 +75,12 @@
   when: mysql_version == "ps_55"
 
 
-##### Installation for MySQL 5.5 and 5.6 using the IUS repository
-# Install repository
-- set_fact:
-    base_distro: "Redhat"
-    base_distro_tag: "el"
-  when: ansible_distribution == "Red Hat Enterprise Linux"
-
-- set_fact:
-    base_distro: "CentOS"
-    base_distro_tag: "centos"
-  when: ansible_distribution == "CentOS"
-
-- set_fact:
-    base_version_int: "{{ ansible_distribution_version | int }}"
-
+# Installation for MySQL 5.5 and 5.6 using the IUS repository
 - name: Install ius repository
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/{{ base_distro }}/{{ base_version_int }}/x86_64/ius-release-1.0-14.ius.{{ base_distro_tag }}{{ base_version_int }}.noarch.rpm
+  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/{{ ius_distro_tag }}/{{ distro_version_int }}/x86_64/ius-release-1.0-14.ius.{{ ius_distro_tag_minor }}{{ distro_version_int }}.noarch.rpm
   args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56")
+  when: mysql_version == "mysql_55" or mysql_version == "mysql_56"
 
-# Install server
 - name: Install MySQL 5.6 packages
   yum: name={{ item }} state=present
   with_items:
@@ -83,7 +103,24 @@
   when: mysql_version == "mysql_55"
 
 
-##### Install additional MySQL utilities, i.e. memory allocator and python lib
+# Installation for MariaDB 5.5 and 10.0 using MariaDB repository
+- name: Install MariaDB repository
+  template: src=mariadb.repo.j2 dest=/etc/yum.repos.d/mariadb.repo
+  when: mysql_version == "mariadb_55" or mysql_version == "mariadb_100"
+
+- name: Install MariaDB packages
+  yum: name={{ item }} state=present
+  with_items:
+   - MariaDB-client
+   - MariaDB-common
+   - MariaDB-compat
+   - MariaDB-server
+   - MariaDB-shared
+  when: mysql_version == "mariadb_55" or mysql_version == "mariadb_100"
+
+
+##### Post-installation configuration
+# Install additional MySQL utilities, i.e. memory allocator and python lib
 - name: Install MySQL utilities
   yum: name={{ item }} state=present
   with_items: 
@@ -91,7 +128,7 @@
    - jemalloc
 
 
-##### Configure MySQL and filesystem
+# Configure MySQL and filesystem
 - name: Create MySQL temporary directory
   file: path={{ tmpdir }} state=directory mode=0750 owner=mysql group=mysql
 
@@ -101,18 +138,12 @@
 - name: Create MySQL data directory
   file: path={{ datadir }} state=directory mode=0750 owner=mysql group=mysql
 
+
 # Configure my.cnf
-- set_fact:
-    mysql_binary: "mysql"
-  when: mysql_version == "ps_56" or mysql_version == "ps_55"
-
-- set_fact:
-    mysql_binary: "mysqld"
-  when: mysql_version == "mysql_56" or mysql_version == "mysql_55"
-
 - name: Configure my.cnf
   template: src=my.cnf.j2 dest=/etc/my.cnf
   notify: restart {{ mysql_binary }}
+
 
 # Restart and enable service
 - name: Ensure MySQL is started with chkconfig on
