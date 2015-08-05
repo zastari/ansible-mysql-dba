@@ -42,39 +42,25 @@
 
 ##### Installation for MySQL 5.5 and 5.6 using the IUS repository
 # Install repository
-- name: Install ius repository (RHEL 5)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/Redhat/5/x86_64/ius-release-1.0-14.ius.el5.noarch.rpm
-  args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version | int == 5
+- set_fact:
+    base_distro: "Redhat"
+    base_distro_tag: "el"
+  when: ansible_distribution == "Red Hat Enterprise Linux"
 
-- name: Install ius repository (RHEL 6)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/Redhat/6/x86_64/ius-release-1.0-14.ius.el6.noarch.rpm
-  args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version | int == 6
+- set_fact:
+    base_distro: "CentOS"
+    base_distro_tag: "centos"
+  when: ansible_distribution == "CentOS"
 
-- name: Install ius repository (RHEL 7)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/Redhat/7/x86_64/ius-release-1.0-14.ius.el7.noarch.rpm
-  args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "Red Hat Enterprise Linux" and ansible_distribution_version | int == 7
+- set_fact:
+    base_version_int: "{{ ansible_distribution_version | int }}"
 
-- name: Install ius repository (CentOS 5)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/5/x86_64/ius-release-1.0-14.ius.centos5.noarch.rpm
+- name: Install ius repository
+  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/{{ base_distro }}/{{ base_version_int }}/x86_64/ius-release-1.0-14.ius.{{ base_distro_tag }}{{ base_version_int }}.noarch.rpm
   args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "CentOS" and ansible_distribution_version | int == 5
-
-- name: Install ius repository (CentOS 6)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
-  args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "CentOS" and ansible_distribution_version | int == 6
-
-- name: Install ius repository (CentOS 7)
-  shell: rpm -Uvh http://dl.iuscommunity.org/pub/ius/stable/CentOS/7/x86_64/ius-release-1.0-14.ius.centos7.noarch.rpm
-  args: {creates: /etc/yum.repos.d/ius.repo}
-  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56") and ansible_distribution == "CentOS" and ansible_distribution_version | int == 7
+  when: (mysql_version == "mysql_55" or mysql_version == "mysql_56")
 
 # Install server
-- debug: msg="{{ ansible_distribution }} {{ ansible_distribution_version | int }} {{ mysql_version }}"
-
 - name: Install MySQL 5.6 packages
   yum: name={{ item }} state=present
   with_items:
@@ -116,21 +102,18 @@
   file: path={{ datadir }} state=directory mode=0750 owner=mysql group=mysql
 
 # Configure my.cnf
-- name: Configure my.cnf (PS)
-  template: src=my.cnf.j2 dest=/etc/my.cnf
-  notify: restart mysql
+- set_fact:
+    mysql_binary: "mysql"
   when: mysql_version == "ps_56" or mysql_version == "ps_55"
 
-- name: Configure my.cnf (MySQL)
-  template: src=my.cnf.j2 dest=/etc/my.cnf
-  notify: restart mysqld
+- set_fact:
+    mysql_binary: "mysqld"
   when: mysql_version == "mysql_56" or mysql_version == "mysql_55"
+
+- name: Configure my.cnf
+  template: src=my.cnf.j2 dest=/etc/my.cnf
+  notify: restart {{ mysql_binary }}
 
 # Restart and enable service
-- name: Ensure MySQL (PS) is started with chkconfig on
-  service: name=mysql state=started enabled=yes
-  when: mysql_version == "ps_56" or mysql_version == "ps_55"
-
-- name: Ensure MySQL (MySQL) is started with chkconfig on
-  service: name=mysqld state=started enabled=yes
-  when: mysql_version == "mysql_56" or mysql_version == "mysql_55"
+- name: Ensure MySQL is started with chkconfig on
+  service: name={{ mysql_binary }} state=started enabled=yes
