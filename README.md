@@ -1,16 +1,11 @@
 MySQL DBA Topologies
 ====================
 
-These plays are designed to deploy common replication topologies. Their goal
-is to quickly provide an environment to allow testing and evaluation of
-different topologies. They are designed for RHEL/CentOS 5 or 6. RHEL 7 support
-is planned. There is no plan to provide Debian or other distro support at this
-time. Once complete, the following plays will be available:
+These plays are designed to deploy common replication topologies. They are designed for RHEL/CentOS 5, 6, or 7. Currently, the following operations are supported:
 
 Version Installations:
  * Percona Server 5.6
  * Percona Server 5.5
- * MySQL 5.7
  * MySQL 5.6
  * MySQL 5.5
  * MariaDB 10.0
@@ -19,36 +14,26 @@ Version Installations:
 Topologies:
  * Master/Slave (1 or many slaves)
  * Master/Master
- * MMM ( http://mysql-mmm.org/doku.php )
- * MasterHA ( https://code.google.com/p/mysql-master-ha/ )
- * Galera
 
 Role Variables
 --------------
 
-name and server_id host variables must be defined in the inventory file.
-Failure to do so will result in server_id conflicts and cause replication
-errors.
+Servers that will be in a replication topology must have the following parameters assigned to ensure that replication does not break due to conflicts:
+ * name
+ * server_id
+ * parent
 
-Depending on the replication topology, different group variables will be
-configured in the group_vars files corresponding to the type of topology
-being deployed. Full specifications are available in these files:
+MySQL version control is provide through the mysql_version variable. Valid values are mysql_55, mysql_56, ps_55, ps_56, mariadb_55, mariadb_100.
 
-      group_vars/mysql
-      group_vars/mysql_slave
+Roadmap
+-------
 
-Examples
---------
-
-1) Create Master/Slave replication:
-
-      cp hosts.example hosts
-      ansible-playbook -i hosts deploy.yml
-
-Dependencies
-------------
-
-None
+The following functionality is planned but not yet implemented
+ * Installing older versions of the available releases
+ * Installing to a sandbox instance using dbsake sandbox
+ * MySQL MMM
+ * MySQL MasterHA
+ * Galera
 
 License
 -------
