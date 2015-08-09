@@ -1,9 +1,26 @@
 ---
- - name: Add replication user grants
-   mysql_user: name=replicant host={{ ansible_eth1['ipv4']['address'] }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present
+#### Master Configuration
+# These tasks will be delegated to the host given by repl_parent in the slave's role variables
+ - name: Configure Master for replication
+   replace: dest=/etc/my.cnf regexp='^#(server_id|log_bin|binlog_format|expire_logs_days)(.*)$' replace='\1\2'
+   delegate_to: "{{ repl_parent }}"
+   
+ - name: Restart Master to apply configuration changes
+   service: name={{ mysql_binary }} state=restarted
    delegate_to: "{{ repl_parent }}"
 
- - name: Check if slave is already configured for replication
+ - name: Add replication user grants
+   mysql_user: name={{ repl_username }} host={{ ansible_eth1['ipv4']['address'] }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present
+   delegate_to: "{{ repl_parent }}"
+
+##### Slave Configuration
+ - name: Configure slave for replication
+   replace: dest=/etc/my.cnf regexp='^#(server_id|relay_log|relay_log_space_limit|log_slave_updates)(.*)$' replace='\1\2'
+
+ - name: Restart slave to apply configuration changes
+   service: name={{ mysql_binary }} state=restarted
+
+ - name: Check if replication is running on slave
    mysql_replication: mode=getslave
    ignore_errors: true
    register: slave_status

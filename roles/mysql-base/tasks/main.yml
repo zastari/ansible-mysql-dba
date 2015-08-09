@@ -140,10 +140,11 @@
 
 
 # Configure my.cnf
+- debug: msg="binary - {{ mysql_binary }}"
+
 - name: Configure my.cnf
   template: src=my.cnf.j2 dest=/etc/my.cnf
-  notify: restart {{ mysql_binary }}
-
+  notify: restart mysql
 
 # Restart and enable service
 - name: Ensure MySQL is started with chkconfig on

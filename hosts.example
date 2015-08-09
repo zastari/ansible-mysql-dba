@@ -1,14 +1,10 @@
 [mysql:children]
 mysql_slave
-mysql_master
 mysql_base
 
 [mysql_base]
 10.1.0.1 mysql_version=ps_56
 
-[mysql_master]
-10.1.0.2 mysql_version=mysql_56 server_id=101
-
 [mysql_slave]
-10.1.0.3 mysql_version=mysql_55 server_id=201 repl_parent=10.1.0.2
-10.1.0.4 mysql_version=ps_55 server_id=202 repl_parent=10.1.0.3
+10.1.0.3 mysql_version=mysql_56 server_id=201 repl_parent=10.1.0.1
+10.1.0.4 mysql_version=mariadb_100 server_id=202 repl_parent=10.1.0.3
