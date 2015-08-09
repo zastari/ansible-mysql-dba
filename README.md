@@ -21,7 +21,7 @@ Role Variables
 Servers that will be in a replication topology must have the following parameters assigned to ensure that replication does not break due to conflicts:
  * name
  * server_id
- * parent
+ * repl_parent
 
 MySQL version control is provide through the mysql_version variable. Valid values are mysql_55, mysql_56, ps_55, ps_56, mariadb_55, mariadb_100.
 

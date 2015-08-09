@@ -6,13 +6,6 @@
   roles:
     - mysql-base
 
-- name: Configure Masters
-  hosts: mysql_master
-  remote_user: ansible
-  become: true
-  roles:
-    - mysql-repl-master
-
 - name: Configure Slaves
   hosts: mysql_slave
   remote_user: ansible
