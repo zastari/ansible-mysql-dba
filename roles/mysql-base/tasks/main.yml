@@ -138,13 +138,12 @@
 - name: Create MySQL data directory
   file: path={{ datadir }} state=directory mode=0750 owner=mysql group=mysql
 
-
-# Configure my.cnf
-- debug: msg="binary - {{ mysql_binary }}"
-
 - name: Configure my.cnf
   template: src=my.cnf.j2 dest=/etc/my.cnf
   notify: restart mysql
+
+- name: Restart if my.cnf changed
+  meta: flush_handlers
 
 # Restart and enable service
 - name: Ensure MySQL is started with chkconfig on

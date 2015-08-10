@@ -1,0 +1,35 @@
+active_master_role      writer
+
+<host default>
+    cluster_interface       {{ mmm_vip_iface }}
+    pid_path                /var/run/mysql-mmm/mmm_agentd.pid
+    bin_path                /usr/libexec/mysql-mmm/
+    replication_user        {{ hostvars[groups['mmm_node'][0]]['repl_username'] }}
+    replication_password    {{ hostvars[groups['mmm_node'][1]]['repl_password'] }}
+    agent_user              {{ mmm_agent_username }}
+    agent_password          {{ mmm_agent_password }}
+</host>
+
+<host {{ hostvars[groups['mmm_node'][0]]['name'] }}>
+    ip      {{ hostvars[groups['mmm_node'][0]]['inventory_hostname'] }}
+    mode    master
+    peer    {{ hostvars[groups['mmm_node'][1]]['name'] }}
+</host>
+
+<host {{ hostvars[groups['mmm_node'][1]]['name'] }}>
+    ip      {{ hostvars[groups['mmm_node'][1]]['inventory_hostname'] }}
+    mode    master
+    peer    {{ hostvars[groups['mmm_node'][0]]['name'] }}
+</host>
+
+<role writer>
+    hosts   {{ hostvars[groups['mmm_node'][0]]['name'] }}, {{ hostvars[groups['mmm_node'][1]]['name'] }}
+    ips     {{ mmm_writer_vip }}
+    mode    exclusive
+</role>
+
+<role reader>
+    hosts   {{ hostvars[groups['mmm_node'][0]]['name'] }}, {{ hostvars[groups['mmm_node'][1]]['name'] }}
+    ips     {{ mmm_reader_vip }}
+    mode    balanced
+</role>

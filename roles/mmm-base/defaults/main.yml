@@ -1,0 +1,8 @@
+---
+mmm_agent_username: mmm_agent
+mmm_agent_password: agentpassword
+mmm_monitor_username: mmm_monitor
+mmm_monitor_password: monitorpassword
+mmm_writer_vip: 192.168.100.250
+mmm_reader_vip: 192.168.100.251
+mmm_vip_iface: eth1

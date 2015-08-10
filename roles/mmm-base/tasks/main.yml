@@ -1,0 +1,9 @@
+---
+##### Set facts to ensure that conf files are deployed consistently
+- name: Install MMM common packages
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-mmm
+
+- name: Configure mmm_common.conf
+  template: src=mmm_common.conf.j2 dest=/etc/mysql-mmm/mmm_common.conf

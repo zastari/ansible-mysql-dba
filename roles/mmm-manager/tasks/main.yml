@@ -1,0 +1,18 @@
+---
+# Install packages
+- name: Install MMM manager packages
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-mmm-monitor
+
+- name: Configure mmm_mon.conf
+  template: src=mmm_mon.conf.j2 dest=/etc/mysql-mmm/mmm_mon.conf
+
+# Set MySQL grants for MMM monitor
+- name: Add MMM monitor grants
+  mysql_user: name={{ mmm_monitor_username }} host={{ inventory_hostname }} password={{ mmm_monitor_password }} priv=*.*:"REPLICATION CLIENT" state=present
+  delegate_to: "{{ hostvars[groups['mmm_node'][0]]['inventory_hostname'] }}"
+
+# Start and enable agent service
+- name: Ensure mysql-mmm-monitor is started with chkconfig on
+  service: name=mysql-mmm-monitor state=started enabled=yes

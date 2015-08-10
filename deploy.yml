@@ -12,3 +12,17 @@
   become: true
   roles:
     - mysql-repl-slave
+
+- name: Configure MMM nodes
+  hosts: mmm_node
+  remote_user: ansible
+  become: true
+  roles:
+    - mmm-node
+
+- name: Configure MMM managers
+  hosts: mmm_manager
+  remote_user: ansible
+  become: true
+  roles:
+    - mmm-manager

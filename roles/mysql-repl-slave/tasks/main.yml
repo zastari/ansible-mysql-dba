@@ -1,4 +1,11 @@
 ---
+##### Set facts for use in dependent roles e.g mmm-base
+ - set_fact:
+     repl_username: "{{repl_username}}"
+
+ - set_fact:
+     repl_password: "{{repl_password}}"
+
 #### Master Configuration
 # These tasks will be delegated to the host given by repl_parent in the slave's role variables
  - name: Configure Master for replication
@@ -10,7 +17,7 @@
    delegate_to: "{{ repl_parent }}"
 
  - name: Add replication user grants
-   mysql_user: name={{ repl_username }} host={{ ansible_eth1['ipv4']['address'] }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present
+   mysql_user: name={{ repl_username }} host={{ inventory_hostname }} password={{ repl_password }} priv=*.*:"REPLICATION SLAVE" state=present
    delegate_to: "{{ repl_parent }}"
 
 ##### Slave Configuration

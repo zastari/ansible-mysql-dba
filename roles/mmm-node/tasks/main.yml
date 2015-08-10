@@ -1,0 +1,17 @@
+---
+# Install packages
+- name: Install MMM node packages
+  yum: name={{ item }} state=present
+  with_items:
+   - mysql-mmm-agent
+
+- name: Configure mmm_agent.conf
+  template: src=mmm_agent.conf.j2 dest=/etc/mysql-mmm/mmm_agent.conf
+
+# Set MySQL grants for MMM node
+- name: Add MMM Agent grants
+  mysql_user: name={{ mmm_agent_username }} host={{ ansible_eth1['ipv4']['address'] }} password={{ mmm_agent_password }} priv=*.*:"SUPER, REPLICATION CLIENT, PROCESS" state=present
+
+# Start and enable agent service
+- name: Ensure mysql-mmm-agent is started with chkconfig on
+  service: name=mysql-mmm-agent state=started enabled=yes

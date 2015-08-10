@@ -1,0 +1,20 @@
+include mmm_common.conf
+
+<monitor>
+    ip                  127.0.0.1
+    pid_path            /var/run/mysql-mmm/mmm_mond.pid
+    bin_path            /usr/libexec/mysql-mmm
+    status_path         /var/lib/mysql-mmm/mmm_mond.status
+    ping_ips            {{ hostvars[groups['mmm_node'][0]]['inventory_hostname'] }}, {{ hostvars[groups['mmm_node'][0]]['inventory_hostname'] }}
+    auto_set_online     60
+    mode                passive
+
+    # kill_host_bin     /usr/libexec/mysql-mmm/monitor/kill_host
+</monitor>
+
+<host default>
+    monitor_user        {{ mmm_monitor_username }}
+    monitor_password    {{ mmm_monitor_password }}
+</host>
+
+debug 0
