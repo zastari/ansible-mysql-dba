@@ -1,7 +1,7 @@
 MySQL DBA Topologies
 ====================
 
-These plays are designed to deploy common replication topologies. They are designed for RHEL/CentOS 5, 6, or 7. Currently, the following operations are supported:
+This playbook installs MySQL, configures replication topologies, and installs HA replication tools. Currently, only  RHEL/CentOS 5, 6, and 7 are supported. The following operations are supported:
 
 Version Installations:
  * Percona Server 5.6
@@ -15,6 +15,9 @@ Topologies:
  * Master/Slave (1 or many slaves)
  * Master/Master
 
+HA Management Tools:
+ * MySQL MMM (mysql-mmm.org/doku.php)
+
 Role Variables
 --------------
 
@@ -23,7 +26,7 @@ Servers that will be in a replication topology must have the following parameter
  * server_id
  * repl_parent
 
-MySQL version control is provide through the mysql_version variable. Valid values are mysql_55, mysql_56, ps_55, ps_56, mariadb_55, mariadb_100.
+MySQL version control is provided through the mysql_version variable. Valid values are mysql_55, mysql_56, ps_55, ps_56, mariadb_55, mariadb_100.
 
 Roadmap
 -------
@@ -31,7 +34,6 @@ Roadmap
 The following functionality is planned but not yet implemented
  * Installing older versions of the available releases
  * Installing to a sandbox instance using dbsake sandbox
- * MySQL MMM
  * MySQL MasterHA
  * Galera
 
