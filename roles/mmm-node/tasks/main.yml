@@ -10,7 +10,7 @@
 
 # Set MySQL grants for MMM node
 - name: Add MMM Agent grants
-  mysql_user: name={{ mmm_agent_username }} host={{ ansible_eth1['ipv4']['address'] }} password={{ mmm_agent_password }} priv=*.*:"SUPER, REPLICATION CLIENT, PROCESS" state=present
+  mysql_user: name={{ mmm_agent_username }} host={{ inventory_hostname }} password={{ mmm_agent_password }} priv=*.*:"SUPER, REPLICATION CLIENT, PROCESS" state=present
 
 # Start and enable agent service
 - name: Ensure mysql-mmm-agent is started with chkconfig on
