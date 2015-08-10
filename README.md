@@ -16,7 +16,7 @@ Topologies:
  * Master/Master
 
 HA Management Tools:
- * MySQL MMM (mysql-mmm.org/doku.php)
+ * MySQL MMM (http://mysql-mmm.org/doku.php)
 
 Role Variables
 --------------
