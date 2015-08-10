@@ -1,6 +1,3 @@
 ---
  - name: restart mysql
    service: name={{ mysql_binary }} state=restarted
-
- - name: restart mysqld
-   service: name={{ mysql_binary }} state=restarted
