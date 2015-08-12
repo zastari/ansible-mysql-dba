@@ -1,5 +1,4 @@
 ---
-##### Set facts to ensure that conf files are deployed consistently
 - name: Install MMM common packages
   yum: name={{ item }} state=present
   with_items:
